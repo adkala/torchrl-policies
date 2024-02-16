@@ -1,0 +1,2 @@
+- sample_train.py does not actually work, just a framework of running the modules with w&b 
+- currently only sac is implemented
