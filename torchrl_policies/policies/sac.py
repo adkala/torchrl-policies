@@ -1,19 +1,14 @@
-from tensordict import TensorDictBase
 from tensordict.nn.distributions import NormalParamExtractor
 from tensordict.nn import InteractionType, TensorDictModule
 from torchrl.modules import MLP, ProbabilisticActor, ValueOperator
-from torchrl.envs.libs.gym import GymWrapper
-from torchrl.envs import TransformedEnv, Compose
 from torchrl.modules.distributions import TanhNormal
-from torchrl.data import TensorDictReplayBuffer
-from torchrl.data.replay_buffers.storages import LazyMemmapStorage
 from torchrl.objectives import SoftUpdate
 from torchrl.objectives.sac import SACLoss
 from torch import nn
 
 from tqdm import tqdm
 
-from utils import TRLModel
+from ..utils import TorchRLPolicy
 
 import numpy as np
 import torch
@@ -147,7 +142,7 @@ class SAC:
         return optimizer_actor, optimizer_critic, optimizer_alpha
 
 
-class SACModel(SAC, TRLModel):
+class SACPolicy(SAC, TorchRLPolicy):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
