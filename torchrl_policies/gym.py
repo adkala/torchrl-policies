@@ -5,6 +5,10 @@ import gymnasium as gym
 
 
 class TorchRLGymWrapper:  # purpose: get TD for trajectories for step, reset functions
+    """
+    Gets tensordicts for trajectories for 'step' and 'reset' functions
+    """
+
     def __init__(self, env: gym.Env, max_episode_steps=None):
         self.env = env
         self._max_episode_steps = (

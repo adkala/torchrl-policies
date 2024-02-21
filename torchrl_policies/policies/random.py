@@ -1,15 +1,31 @@
-from utils import TorchRLPolicy
+from tensordict import TensorDict
+
+import torch as th
+
+from .base_policy import TorchRLPolicy
 
 
 class RandomPolicy(TorchRLPolicy):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, observation_space, action_space, **kwargs):
         super().__init__(*args, **kwargs)
+        self.observation_space = observation_space
+        self.action_space = action_space
 
     def forward(self, td):  # policy.forward
-        return self.action_spec.rand()
+        td.set("action", self.action_space.rand())
+        return td
 
     def grad(self, sampled_tensordict):
-        pass
+        return 0, TensorDict(
+            {
+                "loss_actor": th.tensor(0, dtype=th.float32),
+                "loss_qvalue": th.tensor(0, dtype=th.float32),
+                "loss_alpha": th.tensor(0, dtype=th.float32),
+                "alpha": th.tensor(0, dtype=th.float32),
+                "entropy": th.tensor(0, dtype=th.float32),
+            },
+            batch_size=th.Size([]),
+        )
 
     def train(self):
         pass

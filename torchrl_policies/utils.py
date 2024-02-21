@@ -1,52 +1,22 @@
-from tensordict import TensorDictBase
 from torchrl.data import TensorDictReplayBuffer, BoundedTensorSpec
 from torchrl.data.replay_buffers.storages import LazyTensorStorage
-from torchrl.data import TensorDictReplayBuffer
-from abc import ABC, abstractmethod
-from torch import nn
 
-import torch
-import numpy as np
+import time
 
 
-class TorchRLPolicy(ABC):
-    def __init__(self, obs_spec, action_spec):
-        self.obs_spec = obs_spec
-        self.action_spec = action_spec
+class PrintLogger:
+    def __init__(self, name):
+        self.step = 0
 
-    def __call__(self, td: TensorDictBase):
-        return self.forward(td)
-
-    @abstractmethod
-    def forward(self, td):  # policy.forward
-        pass
-
-    @abstractmethod
-    def grad(self):  # run gradient step
-        pass
-
-    @abstractmethod
-    def eval(self):
-        pass
-
-    @abstractmethod
-    def train(self):
-        pass
-
-    @abstractmethod
-    def state_dict(self):
-        pass
-
-    @abstractmethod
-    def load_state_dict(self, state_dict):
-        pass
-
-    def save(self, path):
-        return torch.save(self.state_dict(), path)
+    def log_scalar(self, key, value, step=None):
+        if step and step > self.step:
+            self.step = step
+            print(f"\nStep {step}")
+        print(f"{key}: {value}")
 
 
-def create_action_space(low: np.ndarray, high: np.ndarray, dtype, device=None):
-    return BoundedTensorSpec(low, high, device=device, dtype=dtype)
+def create_space_spec(low, high, shape, dtype, device=None):
+    return BoundedTensorSpec(low, high, shape=shape, device=device, dtype=dtype)
 
 
 def create_replay_buffer(buffer_size=1_000_000, pin_memory=False):
@@ -57,3 +27,7 @@ def create_replay_buffer(buffer_size=1_000_000, pin_memory=False):
         ),
     )
     return replay_buffer
+
+
+def get_time_str():
+    return time.strftime("%d-%m-%Y_%H-%M-%S")

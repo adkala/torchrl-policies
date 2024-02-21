@@ -17,7 +17,7 @@ import gymnasium as gym
 
 class SAC:
     def __init__(
-        self, policy, critic, action_spec, device=None
+        self, policy, critic, action_spec
     ):  # used kwarg to better match sb3, but not defaulting critic bc lazy (sb3 defaults critic)
         # set device
         if device is None:
